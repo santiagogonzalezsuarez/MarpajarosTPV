@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Mar pájaros TPV</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Resources.qrc">
+    <normaloff>:/assets/marpajaros.ico</normaloff>:/assets/marpajaros.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QMdiArea" name="mdiArea">
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAsNeeded</enum>
+      </property>
+      <property name="viewMode">
+       <enum>QMdiArea::SubWindowView</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Programa">
+    <property name="title">
+     <string>P&amp;rograma</string>
+    </property>
+    <addaction name="action_Iniciar_sesion"/>
+    <addaction name="separator"/>
+    <addaction name="action_Salir"/>
+   </widget>
+   <widget class="QMenu" name="menu_Ventas">
+    <property name="title">
+     <string>&amp;Ventas</string>
+    </property>
+    <addaction name="action_Nueva_venta"/>
+    <addaction name="action_Listado_de_ventas"/>
+    <addaction name="separator"/>
+    <addaction name="action_Abrir_Cerrar_caja"/>
+   </widget>
+   <widget class="QMenu" name="menu_Compras">
+    <property name="title">
+     <string>C&amp;ompras</string>
+    </property>
+    <addaction name="action_Nueva_compra_al_proveedor"/>
+    <addaction name="action_Listado_de_compras"/>
+   </widget>
+   <widget class="QMenu" name="menu_Productos">
+    <property name="title">
+     <string>&amp;Productos</string>
+    </property>
+    <addaction name="actionListado_de_proveedores"/>
+    <addaction name="actionListado_de_categorias"/>
+    <addaction name="actionListado_de_productos"/>
+    <addaction name="separator"/>
+    <addaction name="actionControl_de_stock"/>
+   </widget>
+   <widget class="QMenu" name="menu_Administracion">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>A&amp;dministración</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>false</bool>
+    </property>
+    <addaction name="actionGestion_de_roles"/>
+    <addaction name="actionGestion_de_usuarios"/>
+   </widget>
+   <widget class="QMenu" name="menu_Ventana">
+    <property name="title">
+     <string>Ven&amp;tana</string>
+    </property>
+    <addaction name="actionCascada"/>
+    <addaction name="actionDividir_horizontalmente"/>
+    <addaction name="separator"/>
+    <addaction name="actionCerrar_todo"/>
+    <addaction name="separator"/>
+   </widget>
+   <addaction name="menu_Programa"/>
+   <addaction name="menu_Ventas"/>
+   <addaction name="menu_Compras"/>
+   <addaction name="menu_Productos"/>
+   <addaction name="menu_Administracion"/>
+   <addaction name="menu_Ventana"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Iniciar_sesion"/>
+   <addaction name="action_Salir"/>
+   <addaction name="separator"/>
+   <addaction name="actionGestion_de_usuarios"/>
+   <addaction name="actionGestion_de_roles"/>
+   <addaction name="separator"/>
+   <addaction name="actionListado_de_proveedores"/>
+   <addaction name="actionListado_de_categorias"/>
+   <addaction name="actionListado_de_productos"/>
+  </widget>
+  <action name="action_Iniciar_sesion">
+   <property name="icon">
+    <iconset theme="system-lock-screen">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Iniciar sesión...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="action_Salir">
+   <property name="icon">
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Salir</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Nueva_venta">
+   <property name="text">
+    <string>&amp;Nueva venta</string>
+   </property>
+  </action>
+  <action name="action_Listado_de_ventas">
+   <property name="text">
+    <string>&amp;Listado de ventas</string>
+   </property>
+  </action>
+  <action name="action_Abrir_Cerrar_caja">
+   <property name="text">
+    <string>&amp;Abrir caja</string>
+   </property>
+  </action>
+  <action name="action_Nueva_compra_al_proveedor">
+   <property name="text">
+    <string>&amp;Nueva compra al proveedor</string>
+   </property>
+  </action>
+  <action name="action_Listado_de_compras">
+   <property name="text">
+    <string>&amp;Listado de compras</string>
+   </property>
+  </action>
+  <action name="actionListado_de_proveedores">
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/assets/proveedores.png</normaloff>:/assets/proveedores.png</iconset>
+   </property>
+   <property name="text">
+    <string>Listado de &amp;proveedores</string>
+   </property>
+  </action>
+  <action name="actionListado_de_categorias">
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/assets/categorias.png</normaloff>:/assets/categorias.png</iconset>
+   </property>
+   <property name="text">
+    <string>Listado de &amp;categorías</string>
+   </property>
+  </action>
+  <action name="actionListado_de_productos">
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/assets/productos.png</normaloff>:/assets/productos.png</iconset>
+   </property>
+   <property name="text">
+    <string>Listado de p&amp;roductos</string>
+   </property>
+  </action>
+  <action name="actionControl_de_stock">
+   <property name="text">
+    <string>Control de &amp;stock</string>
+   </property>
+  </action>
+  <action name="actionGestion_de_roles">
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/assets/users.png</normaloff>:/assets/users.png</iconset>
+   </property>
+   <property name="text">
+    <string>Gestión de &amp;roles</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionGestion_de_usuarios">
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/assets/user.png</normaloff>:/assets/user.png</iconset>
+   </property>
+   <property name="text">
+    <string>Gestión de &amp;usuarios</string>
+   </property>
+  </action>
+  <action name="actionDividir_horizontalmente">
+   <property name="text">
+    <string>&amp;Mosaico</string>
+   </property>
+  </action>
+  <action name="actionCascada">
+   <property name="text">
+    <string>&amp;Cascada</string>
+   </property>
+  </action>
+  <action name="actionCerrar_todo">
+   <property name="text">
+    <string>Cerrar &amp;todo</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>action_Salir</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Iniciar_sesion</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowLogin()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionListado_de_productos</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AbrirListadoProductos()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCascada</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Cascada()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDividir_horizontalmente</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>DividirHorizontalmente()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCerrar_todo</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>CerrarTodo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionGestion_de_usuarios</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AbrirListadoUsuarios()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>ShowLogin()</slot>
+  <slot>AbrirListadoProductos()</slot>
+  <slot>Cascada()</slot>
+  <slot>DividirHorizontalmente()</slot>
+  <slot>CerrarTodo()</slot>
+  <slot>AbrirListadoUsuarios()</slot>
+ </slots>
+</ui>

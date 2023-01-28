@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmLogin</class>
+ <widget class="QDialog" name="frmLogin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>390</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>650</width>
+    <height>390</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>650</width>
+    <height>390</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Mar pájaros TPV - Iniciar sesión</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Resources.qrc">
+    <normaloff>:/assets/marpajaros.ico</normaloff>:/assets/marpajaros.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);
+</string>
+  </property>
+  <widget class="QLabel" name="lblNombreUsuario">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>50</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;Sans Serif&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Nombre de usuario:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblContrasena">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>110</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;Sans Serif&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Contraseña:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtNombreUsuario">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>70</y>
+     <width>241</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit {
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+}
+QLineEdit:disabled {
+color: rgb(127,127,127);
+}
+</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="txtContrasena">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>130</y>
+     <width>241</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit {
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+}
+QLineEdit:disabled {
+color: rgb(127,127,127);
+}
+</string>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnCancelar">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>190</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	color: rgb(0, 0, 0);	
+	background-color: rgb(255, 255, 255);
+}
+QPushButton:disabled {
+	color: rgb(127, 127, 127);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>&amp;Cancelar</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnAceptar">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>190</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:disabled {
+color: rgb(127, 127, 127);
+}
+QPushButton {
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>&amp;Aceptar</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>650</width>
+     <height>390</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/assets/LoginMarpajaros_650.png);</string>
+   </property>
+  </widget>
+  <zorder>widget</zorder>
+  <zorder>lblNombreUsuario</zorder>
+  <zorder>lblContrasena</zorder>
+  <zorder>txtNombreUsuario</zorder>
+  <zorder>txtContrasena</zorder>
+  <zorder>btnCancelar</zorder>
+  <zorder>btnAceptar</zorder>
+ </widget>
+ <tabstops>
+  <tabstop>txtNombreUsuario</tabstop>
+  <tabstop>txtContrasena</tabstop>
+  <tabstop>btnAceptar</tabstop>
+  <tabstop>btnCancelar</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btnCancelar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmLogin</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>324</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnAceptar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmLogin</receiver>
+   <slot>doLogin()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>324</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>doLogin()</slot>
+ </slots>
+</ui>

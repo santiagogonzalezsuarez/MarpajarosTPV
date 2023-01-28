@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmUsuariosForm</class>
+ <widget class="QDialog" name="frmUsuariosForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>363</width>
+    <height>206</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Nuevo usuario</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Resources.qrc">
+    <normaloff>:/assets/user.png</normaloff>:/assets/user.png</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QLabel" name="lblNombre">
+     <property name="text">
+      <string>Nombre:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCancelar">
+       <property name="text">
+        <string>&amp;Cancelar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnAceptar">
+       <property name="text">
+        <string>&amp;Aceptar</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lblApellidos">
+     <property name="text">
+      <string>Apellidos:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lblContrasena">
+     <property name="text">
+      <string>Contraseña:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLineEdit" name="txtUsuario"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lblRol">
+     <property name="text">
+      <string>Rol:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lblUsuario">
+     <property name="text">
+      <string>Nombre de usuario:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="txtContrasena">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="txtNombre"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLineEdit" name="txtApellidos"/>
+   </item>
+   <item row="4" column="2">
+    <widget class="QComboBox" name="cmbRol"/>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>txtUsuario</tabstop>
+  <tabstop>txtContrasena</tabstop>
+  <tabstop>txtNombre</tabstop>
+  <tabstop>txtApellidos</tabstop>
+  <tabstop>cmbRol</tabstop>
+  <tabstop>btnAceptar</tabstop>
+  <tabstop>btnCancelar</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>btnCancelar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmUsuariosForm</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>228</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frmUsuariosForm</sender>
+   <signal>rejected()</signal>
+   <receiver>frmUsuariosForm</receiver>
+   <slot>closeParent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>181</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnAceptar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmUsuariosForm</receiver>
+   <slot>SaveUsuario()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>312</x>
+     <y>183</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>181</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>closeParent()</slot>
+  <slot>SaveUsuario()</slot>
+ </slots>
+</ui>

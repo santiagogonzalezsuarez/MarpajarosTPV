@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/LoginMarpajaros_650.png</file>
+        <file>assets/marpajaros.ico</file>
+        <file>assets/productos.png</file>
+        <file>assets/proveedores.png</file>
+        <file>assets/user.png</file>
+        <file>assets/users.png</file>
+        <file>assets/categorias.png</file>
+        <file>assets/search.png</file>
+    </qresource>
+</RCC>

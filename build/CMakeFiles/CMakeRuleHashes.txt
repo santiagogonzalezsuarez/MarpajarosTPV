@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+781d89139a301f0f1c1c3bcb8ef1a14b CMakeFiles/MarpajarosTPV_autogen
+45e7efddbcbe301954d6d3ea737d0564 MarpajarosTPV_autogen/EWIEGA46WW/qrc_Resources.cpp
