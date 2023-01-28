@@ -1,8 +1,0 @@
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/MarpajarosTPV.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/edit_cache.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/rebuild_cache.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/list_install_components.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/install.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/install/local.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/install/strip.dir
-/home/santi/Proyectos/MarpajarosTPV/build/CMakeFiles/MarpajarosTPV_autogen.dir
