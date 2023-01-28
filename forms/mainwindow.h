@@ -34,6 +34,7 @@ public slots:
     void CerrarTodo();
     void AbrirUsuario(int UsuarioId);
     void AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles);
+    void AbrirListadoRoles();
 
     // Extra
     void UpdateListadoUsuarios();

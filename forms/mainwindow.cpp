@@ -6,6 +6,7 @@
 #include "frmproductoslist.h"
 #include "frmusuarioslist.h"
 #include "frmusuariosform.h"
+#include "frmroleslist.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -116,6 +117,14 @@ void MainWindow::AbrirListadoUsuarios() {
     frUsuariosList->parentWidget()->setWindowIcon(frUsuariosList->windowIcon());
     frUsuariosList->show();
     frUsuariosList->parentWidget()->setMinimumSize(740, 520);
+}
+
+void MainWindow::AbrirListadoRoles() {
+    frmRolesList *frRolesList = new class frmRolesList();
+    this->AddSubWindow(frRolesList, "frmRolesList");
+    frRolesList->parentWidget()->setWindowIcon(frRolesList->windowIcon());
+    frRolesList->show();
+    frRolesList->parentWidget()->setMinimumSize(727, 505);
 }
 
 void MainWindow::Cascada()

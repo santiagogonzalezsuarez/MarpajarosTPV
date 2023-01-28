@@ -4,7 +4,7 @@
 #include "../util/util.h"
 #include <QScrollBar>
 #include <QTimer>
-#include <QJsonDocument>>
+#include <QJsonDocument>
 
 frmUsuariosList::frmUsuariosList(QWidget *parent) :
     QDialog(parent),
@@ -16,7 +16,7 @@ frmUsuariosList::frmUsuariosList(QWidget *parent) :
 
     this->timerSearch = new QTimer(this);
     this->timerSearch->setSingleShot(true);
-    connect(this->timerSearch, &QTimer::timeout, [this]{
+    connect(this->timerSearch, &QTimer::timeout, this, [this]{
         this->page = 1;
         this->LoadPage();
     });
