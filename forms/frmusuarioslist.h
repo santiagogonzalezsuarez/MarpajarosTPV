@@ -29,6 +29,7 @@ public slots:
 
 signals:
     void AbrirUsuario(int UsuarioId);
+    void UpdateListadoUsuarios();
 
 private slots:
     void closeParent();

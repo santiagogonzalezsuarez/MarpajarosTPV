@@ -7,6 +7,7 @@
 #include "frmusuarioslist.h"
 #include "frmusuariosform.h"
 #include "frmroleslist.h"
+#include "frmrolesform.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -114,6 +115,7 @@ void MainWindow::AbrirListadoUsuarios() {
     frmUsuariosList *frUsuariosList = new class frmUsuariosList();
     this->AddSubWindow(frUsuariosList, "frmUsuariosList");
     connect(frUsuariosList, &frmUsuariosList::AbrirUsuario, this, &MainWindow::AbrirUsuario);
+    connect(frUsuariosList, &frmUsuariosList::UpdateListadoUsuarios, this, &MainWindow::UpdateListadoUsuarios);
     frUsuariosList->parentWidget()->setWindowIcon(frUsuariosList->windowIcon());
     frUsuariosList->show();
     frUsuariosList->parentWidget()->setMinimumSize(740, 520);
@@ -122,6 +124,8 @@ void MainWindow::AbrirListadoUsuarios() {
 void MainWindow::AbrirListadoRoles() {
     frmRolesList *frRolesList = new class frmRolesList();
     this->AddSubWindow(frRolesList, "frmRolesList");
+    connect(frRolesList, &frmRolesList::AbrirRol, this, &MainWindow::AbrirRol);
+    connect(frRolesList, &frmRolesList::UpdateListadoRoles, this, &MainWindow::UpdateListadoRoles);
     frRolesList->parentWidget()->setWindowIcon(frRolesList->windowIcon());
     frRolesList->show();
     frRolesList->parentWidget()->setMinimumSize(727, 505);
@@ -173,7 +177,6 @@ void MainWindow::AbrirUsuario(int UsuarioId)
         }
         Util::ErrorAlert(title, errorMessage);
     });
-
 }
 
 void MainWindow::AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles) {
@@ -195,6 +198,56 @@ void MainWindow::AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles) {
     }
 }
 
+void MainWindow::AbrirRol(int RolId)
+{
+    // Cargamos los módulos y permisos
+    QJsonObject getModulosRequest;
+    Util::PerformWebPost(this, "/modulos/getAllModulos", getModulosRequest, [=](QJsonArray modulos) {
+        if (RolId == 0) {
+            QJsonObject rol;
+            rol["Id"] = 0;
+            rol["Rol"] = "";
+            QJsonArray permisosIds;
+            rol["PermisosIds"] = permisosIds;
+            this->AbrirRolJson(rol, modulos);
+        } else {
+            QJsonObject getRolRequest;
+            getRolRequest["Id"] = RolId;
+            Util::PerformWebPost(this, "/roles/getRol", getRolRequest, [=](QJsonObject rol) {
+                this->AbrirRolJson(rol, modulos);
+            }, [](QString errorMessage) {
+                Util::ErrorAlert("Modificar rol", errorMessage);
+            });
+        }
+    }, [=](QString errorMessage) {
+        QString title = "Modificar rol";
+        if (RolId == 0) {
+            title = "Nuevo rol";
+        }
+        Util::ErrorAlert(title, errorMessage);
+    });
+}
+
+void MainWindow::AbrirRolJson(QJsonObject rol, QJsonArray modulos)
+{
+    frmRolesForm *frRolesForm = new class frmRolesForm();
+    this->AddSubWindow(frRolesForm, "frmRolesForm");
+    connect(frRolesForm, &frmRolesForm::UpdateListadoRoles, this, &MainWindow::UpdateListadoRoles);
+    frRolesForm->LoadModulos(modulos);
+    frRolesForm->LoadRol(rol);
+    frRolesForm->parentWidget()->setWindowIcon(frRolesForm->windowIcon());
+    frRolesForm->show();
+    if (rol["Id"].toInt(0) == 0) {
+        frRolesForm->parentWidget()->setWindowTitle("Nuevo rol");
+    } else {
+        frRolesForm->parentWidget()->setWindowTitle("Modificar rol - " + rol["Rol"].toString(""));
+    }
+    frRolesForm->parentWidget()->setMinimumSize(363, 250);
+    if (!frRolesForm->parentWidget()->isMaximized()) {
+        frRolesForm->parentWidget()->resize(880, 700);
+    }
+}
+
 // Recargar ventanas
 void MainWindow::UpdateListadoUsuarios()
 {
@@ -204,6 +257,18 @@ void MainWindow::UpdateListadoUsuarios()
         if (!window->property("MPwindowType").isNull() && window->property("MPwindowType") == "frmUsuariosList") {
             frmUsuariosList *frUsuariosList = (frmUsuariosList*)window->widget();
             frUsuariosList->ActualizarListado();
+        }
+    }
+}
+
+void MainWindow::UpdateListadoRoles()
+{
+    QList<QMdiSubWindow*> windowList = this->ui->mdiArea->subWindowList(QMdiArea::CreationOrder);
+    for (QList<QMdiSubWindow*>::Iterator i = windowList.begin(); i != windowList.end(); ++i) {
+        QMdiSubWindow *window = *i;
+        if (!window->property("MPwindowType").isNull() && window->property("MPwindowType") == "frmRolesList") {
+            frmRolesList *frRolesList = (frmRolesList*)window->widget();
+            frRolesList->ActualizarListado();
         }
     }
 }

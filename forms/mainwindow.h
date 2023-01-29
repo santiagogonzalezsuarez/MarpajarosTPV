@@ -35,9 +35,12 @@ public slots:
     void AbrirUsuario(int UsuarioId);
     void AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles);
     void AbrirListadoRoles();
+    void AbrirRol(int RolId);
+    void AbrirRolJson(QJsonObject rol, QJsonArray modulos);
 
     // Extra
     void UpdateListadoUsuarios();
+    void UpdateListadoRoles();
 
 private:
     Ui::MainWindow *ui;

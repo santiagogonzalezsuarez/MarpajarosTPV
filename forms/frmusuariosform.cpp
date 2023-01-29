@@ -66,6 +66,9 @@ void frmUsuariosForm::LoadUsuario(QJsonObject usuario)
     this->ui->txtApellidos->setText(usuario["Apellidos"].toString(""));
     this->ui->cmbRol->setCurrentIndex(std::max(0, Util::FindInModel(this->rolesComboModel, usuario["RolId"].toInt(0))));
     this->usuario = usuario;
+
+    // Si es un registro nuevo, establecemos el primer rol de la lista.
+    this->usuario["RolId"] = this->rolesComboModel->item(this->ui->cmbRol->currentIndex())->data().toInt();
 }
 
 void frmUsuariosForm::SaveUsuario()

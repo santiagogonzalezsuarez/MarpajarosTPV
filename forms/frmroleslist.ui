@@ -125,5 +125,109 @@
  <resources>
   <include location="../Resources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>txtFiltroSearch</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>SearchChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>375</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tblRoles</sender>
+   <signal>cellDoubleClicked(int,int)</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>ModificarRol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>319</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frmRolesList</sender>
+   <signal>rejected()</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>closeParent()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnNuevo</sender>
+   <signal>clicked()</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>NuevoRol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>676</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnModificar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>ModificarRol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>676</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnEliminar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmRolesList</receiver>
+   <slot>DeleteRoles()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>676</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>closeParent()</slot>
+  <slot>SearchChanged()</slot>
+  <slot>NuevoRol()</slot>
+  <slot>ModificarRol()</slot>
+  <slot>DeleteRoles()</slot>
+ </slots>
 </ui>

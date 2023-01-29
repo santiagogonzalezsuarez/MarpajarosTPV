@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         forms/frmusuarioslist.h forms/frmusuarioslist.cpp forms/frmusuarioslist.ui
         forms/frmusuariosform.h forms/frmusuariosform.cpp forms/frmusuariosform.ui
         forms/frmroleslist.h forms/frmroleslist.cpp forms/frmroleslist.ui
+        forms/frmrolesform.h forms/frmrolesform.cpp forms/frmrolesform.ui
+        util/flowlayout.h util/flowlayout.cpp
         Resources.qrc
 )
 

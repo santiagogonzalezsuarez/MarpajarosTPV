@@ -29,6 +29,7 @@ public slots:
 
 signals:
     void AbrirRol(int RolId);
+    void UpdateListadoRoles();
 
 private slots:
     void closeParent();

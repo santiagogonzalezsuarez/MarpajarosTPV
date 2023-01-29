@@ -83,7 +83,8 @@ void frmUsuariosList::resizeEvent(QResizeEvent *resizeEvent)
 
 }
 
-void frmUsuariosList::ColumnHeaderClicked(int columnIndex) {
+void frmUsuariosList::ColumnHeaderClicked(int columnIndex)
+{
     if (this->sortColumn != columnIndex) {
         this->sortColumn = columnIndex;
         this->sortDirection = Qt::SortOrder::AscendingOrder;
@@ -219,7 +220,8 @@ void frmUsuariosList::AddPage(QJsonObject page)
     this->pageLoaded = page["page"].toInt(0);
 }
 
-void frmUsuariosList::ListScrolled(int position) {
+void frmUsuariosList::ListScrolled(int position)
+{
 
     QScrollBar *vScroll = this->ui->tblUsuarios->verticalScrollBar();
     int verticalMaxValue = vScroll->maximum();
@@ -284,7 +286,7 @@ void frmUsuariosList::DeleteUsuarios()
             }
             deleteUsuariosRequest["UsuariosIds"] = usuariosIds;
             Util::PerformWebPost(this, "/usuarios/deleteUsuarios", deleteUsuariosRequest, [=](QJsonObject result) {
-                this->ActualizarListado();
+                emit this->UpdateListadoUsuarios();
             }, [=](QString errorMessage) {
                 Util::ErrorAlert(this->parentWidget()->windowTitle(), errorMessage);
             });
