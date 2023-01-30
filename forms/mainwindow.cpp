@@ -8,6 +8,7 @@
 #include "frmusuariosform.h"
 #include "frmroleslist.h"
 #include "frmrolesform.h"
+#include "frmconfiguracion.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -25,10 +26,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     frmSplash *frSplash = new class frmSplash(this);
     frSplash->setModal(true);
-    connect(frSplash, &frmSplash::accepted, this, &MainWindow::ShowLogin);
+    connect(frSplash, &frmSplash::accepted, this, &MainWindow::CheckConfig);
 
     frSplash->show();
     this->statusBar()->hide();
+}
+
+void MainWindow::CheckConfig()
+{
+    if ((Util::GetConfigString("API.URL") == nullptr || Util::GetConfigString("API.URL") == "") || Util::GetConfigInt("Caja.CajaActiva") == 0) {
+        frmConfiguracion *frConfiguracion = new class frmConfiguracion(this);
+        frConfiguracion->setModal(true);
+        frConfiguracion->show();
+        connect(frConfiguracion, &frmConfiguracion::accepted, this, &MainWindow::ShowLogin);
+    } else {
+        this->ShowLogin();
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -103,6 +116,13 @@ void MainWindow::SetPermisos(QJsonArray permisos) {
 }
 
 // Acciones del menú
+void MainWindow::AbrirConfiguracion()
+{
+    frmConfiguracion *frConfiguracion = new class frmConfiguracion();
+    frConfiguracion->setModal(true);
+    frConfiguracion->show();
+}
+
 void MainWindow::AbrirListadoProductos() {
     frmProductosList *frProductosList = new class frmProductosList();
     this->AddSubWindow(frProductosList, "frmProductosList");

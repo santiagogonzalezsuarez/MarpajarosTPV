@@ -3,6 +3,12 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QJsonDocument>
+#include <QStandardPaths>
+#include <QStringList>
+#include <QByteArray>
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
 
 Util::Util()
 {
@@ -10,7 +16,7 @@ Util::Util()
 
 void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QJsonObject response)> successCallback, std::function<void (QString errorMessage)> errorCallback)
 {
-    QString fullUrl = Util::serviceURL + url;
+    QString fullUrl = Util::GetConfigString("API.URL") + url;
     const QUrl requestUrl(fullUrl);
     QNetworkRequest request(requestUrl);
     if (Util::accessToken != nullptr) {
@@ -61,7 +67,7 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
 
 void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QJsonArray response)> successCallback, std::function<void (QString errorMessage)> errorCallback)
 {
-    QString fullUrl = Util::serviceURL + url;
+    QString fullUrl = Util::GetConfigString("API.URL") + url;
     const QUrl requestUrl(fullUrl);
     QNetworkRequest request(requestUrl);
     if (Util::accessToken != nullptr) {
@@ -168,4 +174,145 @@ int Util::FindInModel(QStandardItemModel *model, int item)
         }
     }
     return -1;
+}
+
+void Util::LoadConfig()
+{
+    QString fileName = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QDir::separator() + "config.json";
+    QFile file(fileName);
+    if (file.open( QIODevice::ReadOnly )) {
+        QByteArray bytes = file.readAll();
+        file.close();
+
+        QJsonParseError jsonError;
+        QJsonDocument document = QJsonDocument::fromJson( bytes, &jsonError );
+        if (jsonError.error != QJsonParseError::NoError) {
+            QJsonObject newConfig;
+            Util::config = newConfig;
+        }
+        if (document.isObject()) {
+            QJsonObject loadedConfig = document.object();
+            Util::config = loadedConfig;
+        }
+    } else {
+        QJsonObject newConfig;
+        Util::config = newConfig;
+    }
+}
+
+void Util::SaveConfig()
+{
+    QDir path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (!path.exists()) {
+        QDir().mkdir(path.path());
+    }
+    QString fileName = path.path() + QDir::separator() + "config.json";
+    QJsonDocument document(Util::config);
+    QByteArray bytes = document.toJson(QJsonDocument::Indented);
+    QFile file(fileName);
+    if (file.open( QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate ))
+    {
+        QTextStream iStream( &file );
+        iStream.setEncoding(QStringConverter::Utf8);
+        iStream << bytes;
+        file.close();
+    }
+    else
+    {
+        QString errMsg = file.errorString();
+        Util::ErrorAlert("Mar pájaros TPV", "No se ha podido guardar la configuración.\n\nNo se ha podido abrir el archivo: " + fileName + "\n\nEl mensaje de error fue: " + errMsg);
+    }
+}
+
+void Util::SetConfigString(QString path, QString value)
+{
+    Util::config = Util::SetConfigStringPath(Util::config, path, value);
+}
+
+QJsonObject Util::SetConfigStringPath(QJsonObject obj, QString path, QString value)
+{
+    if (path.contains('.')) {
+        QString part = path.split('.').first();
+        QString remainder = path.right(path.length() - part.length() - 1);
+        if (obj[part].isObject()) {
+            QJsonObject objPart = obj[part].toObject();
+            objPart = Util::SetConfigStringPath(objPart, remainder, value);
+            obj[part] = objPart;
+            return obj;
+        } else {
+            QJsonObject tmpObj;
+            obj[part] = tmpObj;
+            QJsonObject objPart = obj[part].toObject();
+            objPart = Util::SetConfigStringPath(objPart, remainder, value);
+            obj[part] = objPart;
+            return obj;
+        }
+    } else {
+        obj[path] = value;
+        return obj;
+    }
+
+}
+
+QString Util::GetConfigString(QString path)
+{
+    QStringList parts = path.split('.');
+    QJsonObject obj = Util::config;
+    for (QStringList::Iterator i = parts.begin(); i != parts.end(); ++i) {
+        if (*i == parts.last()) {
+            return obj[*i].toString(nullptr);
+        } else {
+            if (!obj[*i].isObject()) {
+                return nullptr;
+            }
+            obj = obj[*i].toObject();
+        }
+    }
+    return nullptr;
+}
+
+void Util::SetConfigInt(QString path, int value)
+{
+    Util::config = Util::SetConfigIntPath(Util::config, path, value);
+}
+
+QJsonObject Util::SetConfigIntPath(QJsonObject obj, QString path, int value)
+{
+    if (path.contains('.')) {
+        QString part = path.split('.').first();
+        QString remainder = path.right(path.length() - part.length() - 1);
+        if (obj[part].isObject()) {
+            QJsonObject objPart = obj[part].toObject();
+            objPart = Util::SetConfigIntPath(objPart, remainder, value);
+            obj[part] = objPart;
+            return obj;
+        } else {
+            QJsonObject tmpObj;
+            obj[part] = tmpObj;
+            QJsonObject objPart = obj[part].toObject();
+            objPart = Util::SetConfigIntPath(objPart, remainder, value);
+            obj[part] = objPart;
+            return obj;
+        }
+    } else {
+        obj[path] = value;
+        return obj;
+    }
+}
+
+int Util::GetConfigInt(QString path, int defaultValue)
+{
+    QStringList parts = path.split('.');
+    QJsonObject obj = Util::config;
+    for (QStringList::Iterator i = parts.begin(); i != parts.end(); ++i) {
+        if (*i == parts.last()) {
+            return obj[*i].toInt(defaultValue);
+        } else {
+            if (!obj[*i].isObject()) {
+                return defaultValue;
+            }
+            obj = obj[*i].toObject();
+        }
+    }
+    return defaultValue;
 }

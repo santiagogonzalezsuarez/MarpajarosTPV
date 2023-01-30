@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
         forms/frmusuariosform.h forms/frmusuariosform.cpp forms/frmusuariosform.ui
         forms/frmroleslist.h forms/frmroleslist.cpp forms/frmroleslist.ui
         forms/frmrolesform.h forms/frmrolesform.cpp forms/frmrolesform.ui
+        forms/frmabrircerrarcaja.h forms/frmabrircerrarcaja.cpp forms/frmabrircerrarcaja.ui
+        forms/frmconfiguracion.h forms/frmconfiguracion.cpp forms/frmconfiguracion.ui
         util/flowlayout.h util/flowlayout.cpp
         Resources.qrc
 )

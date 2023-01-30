@@ -32,6 +32,7 @@ public slots:
     void Cascada();
     void DividirHorizontalmente();
     void CerrarTodo();
+    void AbrirConfiguracion();
     void AbrirUsuario(int UsuarioId);
     void AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles);
     void AbrirListadoRoles();
@@ -41,6 +42,9 @@ public slots:
     // Extra
     void UpdateListadoUsuarios();
     void UpdateListadoRoles();
+
+private slots:
+    void CheckConfig();
 
 private:
     Ui::MainWindow *ui;

@@ -118,12 +118,19 @@
     <addaction name="actionCerrar_todo"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuCon_figuraci_n">
+    <property name="title">
+     <string>Con&amp;figuración</string>
+    </property>
+    <addaction name="action_Configuracion_de_la_aplicacion"/>
+   </widget>
    <addaction name="menu_Programa"/>
    <addaction name="menu_Ventas"/>
    <addaction name="menu_Compras"/>
    <addaction name="menu_Productos"/>
    <addaction name="menu_Administracion"/>
    <addaction name="menu_Ventana"/>
+   <addaction name="menuCon_figuraci_n"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -145,6 +152,8 @@
    <addaction name="actionListado_de_proveedores"/>
    <addaction name="actionListado_de_categorias"/>
    <addaction name="actionListado_de_productos"/>
+   <addaction name="separator"/>
+   <addaction name="action_Configuracion_de_la_aplicacion"/>
   </widget>
   <action name="action_Iniciar_sesion">
    <property name="icon">
@@ -261,6 +270,14 @@
   <action name="actionCerrar_todo">
    <property name="text">
     <string>Cerrar &amp;todo</string>
+   </property>
+  </action>
+  <action name="action_Configuracion_de_la_aplicacion">
+   <property name="icon">
+    <iconset theme="applications-other"/>
+   </property>
+   <property name="text">
+    <string>&amp;Configuración de la aplicación</string>
    </property>
   </action>
  </widget>
@@ -396,6 +413,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Configuracion_de_la_aplicacion</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AbrirConfiguracion()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ShowLogin()</slot>
@@ -405,5 +438,6 @@
   <slot>CerrarTodo()</slot>
   <slot>AbrirListadoUsuarios()</slot>
   <slot>AbrirListadoRoles()</slot>
+  <slot>AbrirConfiguracion()</slot>
  </slots>
 </ui>
