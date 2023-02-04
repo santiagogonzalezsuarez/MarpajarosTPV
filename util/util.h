@@ -18,9 +18,11 @@ public:
     static void PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QJsonArray response)> successCallback = nullptr, std::function<void (QString errorMessage)> errorCallback = nullptr);
     static void InfoAlert(QString title, QString message);
     static void ErrorAlert(QString title, QString message);
+    static bool InfoConfirm(QString title, QString message);
     static bool WarningConfirm(QString title, QString message);
     static int Round(double value);
     static int Ceil(double value);
+    static double FixDoubleForCurrency(double value);
     static int FindInModel(QStandardItemModel *model, int item);
     static void LoadConfig();
     static void SaveConfig();

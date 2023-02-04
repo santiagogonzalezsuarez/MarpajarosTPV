@@ -9,6 +9,8 @@
 #include "frmroleslist.h"
 #include "frmrolesform.h"
 #include "frmconfiguracion.h"
+#include "frmsolicitarcontrasena.h"
+#include "frmabrircerrarcaja.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     this->isBeingDestroyed = false;
+    this->cajaAbierta = false;
     ui->setupUi(this);
 
     this->ui->mdiArea->cascadeSubWindows();
@@ -85,6 +88,7 @@ void MainWindow::ShowLogin() {
 }
 
 void MainWindow::SetUser(QJsonObject user) {
+    this->currentUser = user;
     if (!user["Token"].isNull()) {
         this->ui->action_Iniciar_sesion->setText("Cambiar de usuario...");
     } else {
@@ -93,6 +97,26 @@ void MainWindow::SetUser(QJsonObject user) {
     this->setWindowTitle("Mar pájaros TPV - " + user["Nombre"].toString() + " " + user["Apellidos"].toString());
     this->SetPermisos(user["Permisos"].toArray());
     this->ui->mdiArea->closeAllSubWindows();
+
+    this->CheckCajaAbierta();
+}
+
+void MainWindow::CheckCajaAbierta()
+{
+    // Obtenemos el estado de la caja para establecer el nombre de la opción del menú.
+    QJsonObject isCajaAbiertaRequest;
+    isCajaAbiertaRequest["CajaId"] = Util::GetConfigInt("Caja.CajaActiva");
+    Util::PerformWebPost(this, "/caja/getIsCajaAbierta", isCajaAbiertaRequest, [=](QJsonObject result) {
+        if (result["CajaAbierta"].toBool(false)) {
+            this->ui->action_Abrir_Cerrar_caja->setText("&Cerrar caja");
+            this->cajaAbierta = true;
+        } else {
+            this->ui->action_Abrir_Cerrar_caja->setText("&Abrir caja");
+            this->cajaAbierta = false;
+        }
+    }, [](QString errorMessage) {
+        Util::ErrorAlert("Mar pájaros TPV", "No se ha podido obtener el estado de la caja.");
+    });
 }
 
 void MainWindow::SetPermisos(QJsonArray permisos) {
@@ -266,6 +290,47 @@ void MainWindow::AbrirRolJson(QJsonObject rol, QJsonArray modulos)
     if (!frRolesForm->parentWidget()->isMaximized()) {
         frRolesForm->parentWidget()->resize(880, 700);
     }
+}
+
+void MainWindow::AbrirCerrarCaja()
+{
+    frmSolicitarContrasena *frSolicitarContrasena = new class frmSolicitarContrasena(this);
+    frSolicitarContrasena->username = this->currentUser["Username"].toString("");
+    frSolicitarContrasena->setModal(true);
+    if (this->cajaAbierta) {
+        frSolicitarContrasena->SetLabelTitle("Escriba su contraseña para cerrar caja:");
+    } else {
+        frSolicitarContrasena->SetLabelTitle("Escriba su contraseña para abrir caja:");
+    }
+    connect(frSolicitarContrasena, &frmSolicitarContrasena::accepted, this, [=]() {
+        QJsonObject getUltimaAperturaCajaRequest;
+        getUltimaAperturaCajaRequest["CajaId"] = Util::GetConfigInt("Caja.CajaActiva");
+        Util::PerformWebPost(this, "/caja/getUltimaAperturaCaja", getUltimaAperturaCajaRequest, [=](QJsonObject result) {
+            frmAbrirCerrarCaja *frAbrirCerrarCaja = new class frmAbrirCerrarCaja(this);
+            frAbrirCerrarCaja->setModal(true);
+            if (this->cajaAbierta) {
+                frAbrirCerrarCaja->setWindowTitle("Cerrar caja");
+            } else {
+                frAbrirCerrarCaja->setWindowTitle("Abrir caja");
+            }
+            frAbrirCerrarCaja->ultimaAperturaCaja = result;
+            frAbrirCerrarCaja->CalcularImportes();
+            frAbrirCerrarCaja->CuadrePredeterminado();
+            connect(frAbrirCerrarCaja, &frmAbrirCerrarCaja::accepted, this, [=]() {
+                this->CheckCajaAbierta();
+            });
+            frAbrirCerrarCaja->show();
+        }, [=](QString errorMessage) {
+            QString windowTitle;
+            if (this->cajaAbierta) {
+                windowTitle = "Cerrar caja";
+            } else {
+                windowTitle = "Abrir caja";
+            }
+            Util::ErrorAlert(windowTitle, "No se ha podido cargar la información del último cuadre de caja.");
+        });
+    });
+    frSolicitarContrasena->show();
 }
 
 // Recargar ventanas

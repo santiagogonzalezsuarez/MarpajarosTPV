@@ -38,6 +38,7 @@ public slots:
     void AbrirListadoRoles();
     void AbrirRol(int RolId);
     void AbrirRolJson(QJsonObject rol, QJsonArray modulos);
+    void AbrirCerrarCaja();
 
     // Extra
     void UpdateListadoUsuarios();
@@ -55,5 +56,8 @@ private:
     static const int WindowTilingMaximumIterations = 10;
     int WindowTilingCurrentIteration;
     bool isBeingDestroyed;
+    inline static QJsonObject currentUser;
+    bool cajaAbierta;
+    void CheckCajaAbierta();
 };
 #endif // MAINWINDOW_H

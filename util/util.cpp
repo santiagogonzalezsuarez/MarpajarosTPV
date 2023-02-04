@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+#include <QAbstractButton>
 
 Util::Util()
 {
@@ -124,6 +125,8 @@ void Util::InfoAlert(QString title, QString message)
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Information);
+    QList<QAbstractButton*> buttons = msgBox.buttons();
+    buttons.first()->setText("&Aceptar");
     msgBox.exec();
 }
 
@@ -135,7 +138,26 @@ void Util::ErrorAlert(QString title, QString message)
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.setIcon(QMessageBox::Critical);
+    QList<QAbstractButton*> buttons = msgBox.buttons();
+    buttons.first()->setText("&Aceptar");
     msgBox.exec();
+}
+
+bool Util::InfoConfirm(QString title, QString message)
+{
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(title);
+    msgBox.setText(message);
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+    msgBox.setIcon(QMessageBox::Warning);
+    QList<QAbstractButton*> buttons = msgBox.buttons();
+    buttons.first()->setText("&Sí");
+    buttons.last()->setText("&No");
+    if (msgBox.exec() == QMessageBox::Yes) {
+        return true;
+    }
+    return false;
 }
 
 bool Util::WarningConfirm(QString title, QString message)
@@ -146,6 +168,9 @@ bool Util::WarningConfirm(QString title, QString message)
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
     msgBox.setIcon(QMessageBox::Warning);
+    QList<QAbstractButton*> buttons = msgBox.buttons();
+    buttons.first()->setText("&Sí");
+    buttons.last()->setText("&No");
     if (msgBox.exec() == QMessageBox::Yes) {
         return true;
     }
@@ -163,6 +188,11 @@ int Util::Ceil(double value) {
         return inum;
     }
     return inum + 1;
+}
+
+double Util::FixDoubleForCurrency(double value)
+{
+    return ((double)Util::Round(value * 100)) / 100;
 }
 
 int Util::FindInModel(QStandardItemModel *model, int item)

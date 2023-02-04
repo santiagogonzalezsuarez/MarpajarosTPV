@@ -129,8 +129,8 @@
    <addaction name="menu_Compras"/>
    <addaction name="menu_Productos"/>
    <addaction name="menu_Administracion"/>
-   <addaction name="menu_Ventana"/>
    <addaction name="menuCon_figuraci_n"/>
+   <addaction name="menu_Ventana"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -274,7 +274,8 @@
   </action>
   <action name="action_Configuracion_de_la_aplicacion">
    <property name="icon">
-    <iconset theme="applications-other"/>
+    <iconset theme="applications-other">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Configuración de la aplicación</string>
@@ -429,6 +430,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Abrir_Cerrar_caja</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AbrirCerrarCaja()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ShowLogin()</slot>
@@ -439,5 +456,6 @@
   <slot>AbrirListadoUsuarios()</slot>
   <slot>AbrirListadoRoles()</slot>
   <slot>AbrirConfiguracion()</slot>
+  <slot>AbrirCerrarCaja()</slot>
  </slots>
 </ui>

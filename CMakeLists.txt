@@ -9,8 +9,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/util)
 
 set(PROJECT_SOURCES
         util/util.h util/util.cpp
@@ -25,6 +27,8 @@ set(PROJECT_SOURCES
         forms/frmrolesform.h forms/frmrolesform.cpp forms/frmrolesform.ui
         forms/frmabrircerrarcaja.h forms/frmabrircerrarcaja.cpp forms/frmabrircerrarcaja.ui
         forms/frmconfiguracion.h forms/frmconfiguracion.cpp forms/frmconfiguracion.ui
+        forms/frmsolicitarcontrasena.h forms/frmsolicitarcontrasena.cpp forms/frmsolicitarcontrasena.ui
+        util/crelaxeddoublespinbox.h util/crelaxeddoublespinbox.cpp
         util/flowlayout.h util/flowlayout.cpp
         Resources.qrc
 )

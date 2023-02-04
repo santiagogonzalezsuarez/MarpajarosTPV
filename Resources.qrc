@@ -8,5 +8,20 @@
         <file>assets/users.png</file>
         <file>assets/categorias.png</file>
         <file>assets/search.png</file>
+        <file>assets/billetesmonedas/100euros.jpg</file>
+        <file>assets/billetesmonedas/10centimos.gif</file>
+        <file>assets/billetesmonedas/10euros.png</file>
+        <file>assets/billetesmonedas/1centimo.gif</file>
+        <file>assets/billetesmonedas/1euro.gif</file>
+        <file>assets/billetesmonedas/200euros.png</file>
+        <file>assets/billetesmonedas/20centimos.gif</file>
+        <file>assets/billetesmonedas/20euros.jpg</file>
+        <file>assets/billetesmonedas/2centimos.gif</file>
+        <file>assets/billetesmonedas/2euro.gif</file>
+        <file>assets/billetesmonedas/500euros.png</file>
+        <file>assets/billetesmonedas/50centimos.gif</file>
+        <file>assets/billetesmonedas/50euros.jpg</file>
+        <file>assets/billetesmonedas/5centimos.gif</file>
+        <file>assets/billetesmonedas/5euros.jpg</file>
     </qresource>
 </RCC>
