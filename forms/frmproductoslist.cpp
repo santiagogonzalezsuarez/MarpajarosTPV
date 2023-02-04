@@ -4,6 +4,9 @@
 #include "../util/util.h"
 #include <QScrollBar>
 #include <QTimer>
+#include <QMovie>
+#include <QImage>
+#include <QPainter>
 
 frmProductosList::frmProductosList(QWidget *parent) :
     QDialog(parent),
@@ -15,7 +18,7 @@ frmProductosList::frmProductosList(QWidget *parent) :
 
     this->timerSearch = new QTimer(this);
     this->timerSearch->setSingleShot(true);
-    connect(this->timerSearch, &QTimer::timeout, [this]{
+    connect(this->timerSearch, &QTimer::timeout, this, [this]{
         this->page = 1;
         this->LoadPage();
     });
@@ -270,4 +273,81 @@ void frmProductosList::SearchChanged() {
     this->timerSearch->stop();
     this->timerSearch->start(300);
 
+}
+
+// Carga de imágenes
+void frmProductosList::GridSelectionChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
+{
+    if (currentRow != -1) {
+        int registroId = this->ui->tblProductos->item(currentRow, 0)->text().toInt();
+        if (registroId != this->productoImagenId) {
+            if (this->cargandoImagen) {
+                this->recargarImagen = true;
+            } else {
+                int requestId = ++this->productoImagenRequestId;
+                this->productoImagenId = registroId;
+                this->cargandoImagen = true;
+                QMovie *loader = new QMovie(":/assets/loader.gif");
+                this->ui->imgProducto->setMovie(loader);
+                loader->start();
+                QJsonObject getImagenRequest;
+                getImagenRequest["ProductoId"] = registroId;
+                Util::PerformWebPost(this, "/productos/getImagen", getImagenRequest, [=](QByteArray imageData) {
+                    this->ui->imgProducto->setMovie(nullptr);
+                    delete loader;
+                    if (this->productoImagenRequestId == requestId) {
+                        QImage imgProducto;
+                        bool success = imgProducto.loadFromData(imageData);
+                        if (success) {
+                            QImage img(150, 250, QImage::Format_ARGB32);
+                            int x = 0;
+                            int y = 0;
+                            int width = imgProducto.width();
+                            int height = imgProducto.height();
+
+                            if (imgProducto.height() * img.width() / imgProducto.width() > img.height()) {
+                                height = img.height();
+                                width = imgProducto.width() * img.height() / imgProducto.height();
+                            } else {
+                                width = img.width();
+                                height = imgProducto.height() * img.width() / imgProducto.width();
+                            }
+                            x = (img.width() - width) / 2;
+                            y = (img.height() - height) / 2;
+
+                            QPainter qPainter(&img);
+                            qPainter.fillRect(0, 0, 150, 250, QBrush(Qt::white));
+                            qPainter.drawImage(QRect(x, y, width, height), imgProducto);
+                            this->ui->imgProducto->setPixmap(QPixmap::fromImage(img));
+
+                        } else {
+                            QImage img(150, 250, QImage::Format_ARGB32);
+                            QPainter qPainter(&img);
+                            qPainter.fillRect(0, 0, 150, 250, QBrush(Qt::white));
+                            this->ui->imgProducto->setPixmap(QPixmap::fromImage(img));
+                        }
+                    }
+                    this->cargandoImagen = false;
+                    if (this->recargarImagen) {
+                        this->recargarImagen = false;
+                        this->GridSelectionChanged(this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn(), this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn());
+                    }
+                }, [=](QString err) {
+                    this->ui->imgProducto->setMovie(nullptr);
+                    delete loader;
+                    if (this->productoImagenRequestId == requestId) {
+                        QImage img(150, 250, QImage::Format_ARGB32);
+                        QPainter qPainter(&img);
+                        qPainter.fillRect(0, 0, 150, 250, QBrush(Qt::white));
+                        this->ui->imgProducto->setPixmap(QPixmap::fromImage(img));
+                    }
+                    this->cargandoImagen = false;
+                    if (this->recargarImagen) {
+                        this->recargarImagen = false;
+                        this->GridSelectionChanged(this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn(), this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn());
+                    }
+                });
+            }
+        }
+    }
 }

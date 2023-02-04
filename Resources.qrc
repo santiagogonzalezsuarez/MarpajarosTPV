@@ -23,5 +23,6 @@
         <file>assets/billetesmonedas/50euros.jpg</file>
         <file>assets/billetesmonedas/5centimos.gif</file>
         <file>assets/billetesmonedas/5euros.jpg</file>
+        <file>assets/loader.gif</file>
     </qresource>
 </RCC>

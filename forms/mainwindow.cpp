@@ -137,6 +137,32 @@ void MainWindow::SetPermisos(QJsonArray permisos) {
     this->ui->action_Abrir_Cerrar_caja->setVisible(permisos.contains(610) || permisos.contains(620));
     this->ui->actionControl_de_stock->setVisible(permisos.contains(610) || permisos.contains(620));
 
+    this->FixSeparators();
+
+}
+
+void MainWindow::FixSeparators()
+{
+    bool lastItemIsSeparator = false;
+    QList<QAction*> actions = this->ui->toolBar->actions();
+    for (QList<QAction*>::Iterator i = actions.begin(); i != actions.end(); ++i) {
+        QAction *item = (QAction*)*i;
+        if (item->isSeparator() && lastItemIsSeparator) {
+            item->setVisible(false);
+        }
+        if (item->isSeparator() && (!lastItemIsSeparator)) {
+            item->setVisible(true);
+        }
+        if (item->isSeparator()) {
+            lastItemIsSeparator = true;
+        }
+        if (!item->isSeparator()) {
+            if (item->isVisible()) {
+                lastItemIsSeparator = false;
+            }
+        }
+    }
+
 }
 
 // Acciones del menú

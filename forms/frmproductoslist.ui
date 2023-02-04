@@ -64,18 +64,25 @@
       </spacer>
      </item>
      <item>
-      <widget class="QGraphicsView" name="grImagen">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QLabel" name="imgProducto">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>250</height>
+        </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>150</width>
          <height>250</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 1px solid #cccccc;
+background-color: white;</string>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -225,9 +232,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tblProductos</sender>
+   <signal>currentCellChanged(int,int,int,int)</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>GridSelectionChanged(int,int,int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>closeParent()</slot>
   <slot>SearchChanged()</slot>
+  <slot>GridSelectionChanged(int,int,int,int)</slot>
  </slots>
 </ui>

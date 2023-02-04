@@ -59,5 +59,6 @@ private:
     inline static QJsonObject currentUser;
     bool cajaAbierta;
     void CheckCajaAbierta();
+    void FixSeparators();
 };
 #endif // MAINWINDOW_H

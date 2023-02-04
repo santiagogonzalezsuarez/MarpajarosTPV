@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QStandardItemModel>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QByteArray>
 
 class Util
 {
@@ -16,6 +17,7 @@ public:
     inline static QString accessToken;
     static void PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QJsonObject response)> successCallback = nullptr, std::function<void (QString errorMessage)> errorCallback = nullptr);
     static void PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QJsonArray response)> successCallback = nullptr, std::function<void (QString errorMessage)> errorCallback = nullptr);
+    static void PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, std::function<void (QByteArray response)> successCallback = nullptr, std::function<void (QString errorMessage)> errorCallback = nullptr);
     static void InfoAlert(QString title, QString message);
     static void ErrorAlert(QString title, QString message);
     static bool InfoConfirm(QString title, QString message);

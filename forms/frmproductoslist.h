@@ -29,6 +29,7 @@ private slots:
     void LoadPage();
     void ColumnHeaderClicked(int columnIndex);
     void ListScrolled(int position);
+    void GridSelectionChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
 private:
     Ui::frmProductosList *ui;
@@ -40,6 +41,11 @@ private:
     int requestId;
     int pageRequested;
     int pageLoaded;
+
+    int productoImagenId = 0;
+    int productoImagenRequestId = 0;
+    bool recargarImagen = false;
+    bool cargandoImagen = false;
 };
 
 #endif // FRMPRODUCTOSLIST_H
