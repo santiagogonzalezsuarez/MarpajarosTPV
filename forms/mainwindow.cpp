@@ -11,6 +11,7 @@
 #include "frmconfiguracion.h"
 #include "frmsolicitarcontrasena.h"
 #include "frmabrircerrarcaja.h"
+#include "frmproductosform.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,6 +34,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     frSplash->show();
     this->statusBar()->hide();
+}
+
+MainWindow::~MainWindow()
+{
+    this->isBeingDestroyed = true;
+    delete ui;
 }
 
 void MainWindow::CheckConfig()
@@ -58,12 +65,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
             this->close();
         });
     }
-}
-
-MainWindow::~MainWindow()
-{
-    this->isBeingDestroyed = true;
-    delete ui;
 }
 
 void MainWindow::AddSubWindow(QWidget *window, QString windowType) { // Similar to Windows MDI Forms, so we don't get the windows to show offscreen
@@ -176,6 +177,8 @@ void MainWindow::AbrirConfiguracion()
 void MainWindow::AbrirListadoProductos() {
     frmProductosList *frProductosList = new class frmProductosList();
     this->AddSubWindow(frProductosList, "frmProductosList");
+    connect(frProductosList, &frmProductosList::AbrirProducto, this, &MainWindow::AbrirProducto);
+    connect(frProductosList, &frmProductosList::UpdateListadoProductos, this, &MainWindow::UpdateListadoProductos);
     frProductosList->parentWidget()->setWindowIcon(frProductosList->windowIcon());
     frProductosList->show();
     frProductosList->parentWidget()->setMinimumSize(1150, 650);
@@ -214,6 +217,64 @@ void MainWindow::DividirHorizontalmente()
 void MainWindow::CerrarTodo()
 {
     this->ui->mdiArea->closeAllSubWindows();
+}
+
+void MainWindow::AbrirProducto(int ProductoId)
+{
+    QJsonObject getAllCategoriasRequest;
+    Util::PerformWebPost(this, "/categorias/getAllCategorias", getAllCategoriasRequest, [=](QJsonObject categoriasResult) {
+        QJsonArray categorias = categoriasResult["Categorias"].toArray();
+        QJsonObject getProveedoresComboRequest;
+        Util::PerformWebPost(this, "/proveedores/getProveedoresCombo", getProveedoresComboRequest, [=](QJsonArray proveedores) {
+            if (ProductoId == 0) {
+                QJsonObject producto;
+                producto["Id"] = 0;
+                producto["CategoriaId"] = 0;
+                producto["CodigoBarras"] = "";
+                producto["Producto"] = "";
+                producto["IVA"] = Util::FixDoubleForCurrency(26.2f);
+                producto["Marca"] = "";
+                producto["PrecioVenta"] = 0;
+                producto["StockMinimo"] = 0;
+                // TODO: Rellenar el resto de campos.
+                this->AbrirProductoJson(producto, categorias, proveedores);
+            } else {
+                QJsonObject getProductoRequest;
+                getProductoRequest["Id"] = ProductoId;
+                Util::PerformWebPost(this, "/productos/getProducto", getProductoRequest, [=](QJsonObject producto) {
+                    this->AbrirProductoJson(producto, categorias, proveedores);
+                }, [](QString errorMessage) {
+                    Util::ErrorAlert("Modificar producto", errorMessage);
+                });
+            }
+        });
+    }, [=](QString errorMessage) {
+        QString title = "Modificar producto";
+        if (ProductoId == 0) {
+            title = "Nuevo producto";
+        }
+        Util::ErrorAlert(title, errorMessage);
+    });
+}
+
+void MainWindow::AbrirProductoJson(QJsonObject producto, QJsonArray categorias, QJsonArray proveedores) {
+    frmProductosForm *frProductosForm = new class frmProductosForm();
+    this->AddSubWindow(frProductosForm, "frmProductosForm");
+    connect(frProductosForm, &frmProductosForm::UpdateListadoProductos, this, &MainWindow::UpdateListadoProductos);
+    frProductosForm->LoadCategorias(categorias);
+    frProductosForm->LoadProveedores(proveedores);
+    frProductosForm->LoadProducto(producto);
+    frProductosForm->parentWidget()->setWindowIcon(frProductosForm->windowIcon());
+    frProductosForm->show();
+    if (producto["Id"].toInt(0) == 0) {
+        frProductosForm->parentWidget()->setWindowTitle("Nuevo producto");
+    } else {
+        frProductosForm->parentWidget()->setWindowTitle("Modificar producto - " + producto["Producto"].toString(""));
+    }
+    frProductosForm->parentWidget()->setMinimumSize(800, 450);
+    if (!frProductosForm->parentWidget()->isMaximized()) {
+        frProductosForm->parentWidget()->resize(850, 620);
+    }
 }
 
 void MainWindow::AbrirUsuario(int UsuarioId)
@@ -360,6 +421,18 @@ void MainWindow::AbrirCerrarCaja()
 }
 
 // Recargar ventanas
+void MainWindow::UpdateListadoProductos()
+{
+    QList<QMdiSubWindow*> windowList = this->ui->mdiArea->subWindowList(QMdiArea::CreationOrder);
+    for (QList<QMdiSubWindow*>::Iterator i = windowList.begin(); i != windowList.end(); ++i) {
+        QMdiSubWindow *window = *i;
+        if (!window->property("MPwindowType").isNull() && window->property("MPwindowType") == "frmProductosList") {
+            frmProductosList *frProductosList = (frmProductosList*)window->widget();
+            frProductosList->ActualizarListado();
+        }
+    }
+}
+
 void MainWindow::UpdateListadoUsuarios()
 {
     QList<QMdiSubWindow*> windowList = this->ui->mdiArea->subWindowList(QMdiArea::CreationOrder);

@@ -10,6 +10,8 @@
 #include <QTextStream>
 #include <QAbstractButton>
 #include <QTimer>
+#include <QList>
+#include "../controls/treeitem.h"
 
 Util::Util()
 {
@@ -28,20 +30,18 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QJsonDocument doc(requestObj);
     QByteArray data = doc.toJson(QJsonDocument::Compact);
     QNetworkReply *reply = Util::networkAccessManager->post(request, data);
-    QMetaObject::Connection replyConnection;
-    QMetaObject::Connection errorConnection;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
-    errorConnection = QObject::connect(timer, &QTimer::timeout, widget, [=](){
-        QObject::disconnect(replyConnection);
+    QObject::connect(timer, &QTimer::timeout, widget, [=](){
+        reply->disconnect();
+        delete timer;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
-        delete timer;
     });
     timer->start(30000);
-    replyConnection = QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
-        QObject::disconnect(errorConnection);
+    QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
+        timer->disconnect();
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
@@ -84,20 +84,18 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QJsonDocument doc(requestObj);
     QByteArray data = doc.toJson(QJsonDocument::Compact);
     QNetworkReply *reply = Util::networkAccessManager->post(request, data);
-    QMetaObject::Connection replyConnection;
-    QMetaObject::Connection errorConnection;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
-    errorConnection = QObject::connect(timer, &QTimer::timeout, widget, [=](){
-        QObject::disconnect(replyConnection);
+    QObject::connect(timer, &QTimer::timeout, widget, [=](){
+        reply->disconnect();
+        delete timer;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
-        delete timer;
     });
     timer->start(30000);
-    replyConnection = QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
-        QObject::disconnect(errorConnection);
+    QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
+        timer->disconnect();
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
@@ -145,15 +143,15 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
     errorConnection = QObject::connect(timer, &QTimer::timeout, widget, [=](){
-        QObject::disconnect(replyConnection);
+        reply->disconnect();
+        delete timer;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
-        delete timer;
     });
     timer->start(30000);
     replyConnection = QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
-        QObject::disconnect(errorConnection);
+        timer->disconnect();
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray responseBytes = reply->readAll();
@@ -261,6 +259,59 @@ int Util::FindInModel(QStandardItemModel *model, int item)
         }
     }
     return -1;
+}
+
+int Util::FindInModel(QStandardItemModel *model, double item)
+{
+    for (int i = 0; i < model->rowCount(); ++i) {
+        QVariant data = model->item(i)->data();
+        if (data == item) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+QModelIndex Util::FindInModel(TreeModel *model, int item)
+{
+
+    QList<QModelIndex> parents;
+    QList<int> iteration;
+    int i = -1;
+    while (true) {
+        ++i;
+        QModelIndex parent;
+        if (parents.count() > 0) {
+            parent = parents.last();
+        }
+        int rows = model->rowCount(parent);
+        if (i >= rows) {
+            if (parents.count() < 1) {
+                break;
+            } else {
+                parents.pop_back();
+                i = iteration.last();
+                iteration.pop_back();
+            }
+        } else {
+            QModelIndex itemIndex = model->index(i, 1, parent);
+            if (itemIndex.isValid()) {
+                TreeItem* ti = (TreeItem*)itemIndex.internalPointer();
+                if (ti->data(1).toInt(0) == item) {
+                    return itemIndex;
+                }
+                // Si este item tiene al menos 1 hijo, el índice en fila 0 columna 0 debería ser válido.
+                QModelIndex firstChild = model->index(0, 0, model->index(i, 0, parent));
+                if (firstChild.isValid()) {
+                    parents.push_back(model->index(i, 0, parent));
+                    iteration.push_back(i);
+                    i = -1;
+                }
+            }
+        }
+    }
+
+    return QModelIndex();
 }
 
 void Util::LoadConfig()

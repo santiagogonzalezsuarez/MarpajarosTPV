@@ -28,6 +28,8 @@ public slots:
 
     // Menu Actions
     void AbrirListadoProductos();
+    void AbrirProducto(int ProductoId);
+    void AbrirProductoJson(QJsonObject producto, QJsonArray categorias, QJsonArray proveedores);
     void AbrirListadoUsuarios();
     void Cascada();
     void DividirHorizontalmente();
@@ -41,6 +43,7 @@ public slots:
     void AbrirCerrarCaja();
 
     // Extra
+    void UpdateListadoProductos();
     void UpdateListadoUsuarios();
     void UpdateListadoRoles();
 

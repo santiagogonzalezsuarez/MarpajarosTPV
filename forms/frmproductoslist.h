@@ -23,6 +23,13 @@ public:
 
 public slots:
     void SearchChanged();
+    void NuevoProducto();
+    void ModificarProducto();
+    void ActualizarListado();
+
+signals:
+    void UpdateListadoProductos();
+    void AbrirProducto(int ProductoId);
 
 private slots:
     void closeParent();
@@ -30,6 +37,7 @@ private slots:
     void ColumnHeaderClicked(int columnIndex);
     void ListScrolled(int position);
     void GridSelectionChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+    void DeleteProductos();
 
 private:
     Ui::frmProductosList *ui;

@@ -31,7 +31,6 @@ private slots:
 
 private:
     Ui::frmUsuariosForm *ui;
-    QJsonArray roles;
     QStandardItemModel *rolesComboModel;
 };
 

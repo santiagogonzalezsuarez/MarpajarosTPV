@@ -8,6 +8,8 @@
 #include <QStandardItemModel>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QByteArray>
+#include <QModelIndex>
+#include "../controls/treemodel.h"
 
 class Util
 {
@@ -26,6 +28,8 @@ public:
     static int Ceil(double value);
     static double FixDoubleForCurrency(double value);
     static int FindInModel(QStandardItemModel *model, int item);
+    static int FindInModel(QStandardItemModel *model, double item);
+    static QModelIndex FindInModel(TreeModel *model, int item);
     static void LoadConfig();
     static void SaveConfig();
     static QString GetConfigString(QString path);

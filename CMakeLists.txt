@@ -28,8 +28,13 @@ set(PROJECT_SOURCES
         forms/frmabrircerrarcaja.h forms/frmabrircerrarcaja.cpp forms/frmabrircerrarcaja.ui
         forms/frmconfiguracion.h forms/frmconfiguracion.cpp forms/frmconfiguracion.ui
         forms/frmsolicitarcontrasena.h forms/frmsolicitarcontrasena.cpp forms/frmsolicitarcontrasena.ui
+        forms/frmproductosform.h forms/frmproductosform.cpp forms/frmproductosform.ui
         util/crelaxeddoublespinbox.h util/crelaxeddoublespinbox.cpp
         util/flowlayout.h util/flowlayout.cpp
+        controls/treeitem.h controls/treeitem.cpp
+        controls/treemodel.h controls/treemodel.cpp
+        controls/treeviewautohideable.h controls/treeviewautohideable.cpp
+        controls/productoproveedorcontrol.h controls/productoproveedorcontrol.cpp controls/productoproveedorcontrol.ui
         Resources.qrc
 )
 

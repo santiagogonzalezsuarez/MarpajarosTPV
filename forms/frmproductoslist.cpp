@@ -219,13 +219,14 @@ void frmProductosList::AddPage(QJsonObject page)
         ui->tblProductos->setItem(row, 5, cell);
 
         // Precio compra
-        cell = new QTableWidgetItem(((QString::number(producto["PrecioCompra"].toDouble(0), 'f', 2).replace(".", ",")) + " €"));
+        QLocale curLocale;
+        cell = new QTableWidgetItem(curLocale.toString(producto["PrecioCompra"].toDouble(0), 'f', 2) + " €");
         cell->setFlags(cell->flags() ^ Qt::ItemIsEditable);
         cell->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         ui->tblProductos->setItem(row, 6, cell);
 
         // Precio venta
-        cell = new QTableWidgetItem(((QString::number(producto["PrecioVenta"].toDouble(0), 'f', 2).replace(".", ",")) + " €"));
+        cell = new QTableWidgetItem(curLocale.toString(producto["PrecioVenta"].toDouble(0), 'f', 2) + " €");
         cell->setFlags(cell->flags() ^ Qt::ItemIsEditable);
         cell->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
         ui->tblProductos->setItem(row, 7, cell);
@@ -274,6 +275,61 @@ void frmProductosList::SearchChanged() {
     this->timerSearch->start(300);
 
 }
+
+void frmProductosList::NuevoProducto()
+{
+    emit this->AbrirProducto(0);
+}
+
+void frmProductosList::ModificarProducto()
+{
+    // Determinamos el primer elemento seleccionado.
+    if (this->ui->tblProductos->selectedItems().count())
+    {
+        int row = this->ui->tblProductos->selectedItems().last()->row();
+        if (this->ui->tblProductos->currentRow() > -1) {
+            row = this->ui->tblProductos->currentRow();
+        }
+        int registroId = this->ui->tblProductos->item(row, 0)->text().toInt();
+        emit this->AbrirProducto(registroId);
+    }
+    else
+    {
+        Util::ErrorAlert("Modificar producto", "Seleccione un producto para modificar.");
+    }
+}
+
+void frmProductosList::ActualizarListado()
+{
+    this->page = 1;
+    this->LoadPage();
+}
+
+void frmProductosList::DeleteProductos()
+{
+    if (this->ui->tblProductos->selectedItems().count() > 0) {
+        if (Util::WarningConfirm("Eliminar productos", "¿Está seguro de que quiere eliminar los productos seleccionados?")) {
+            QJsonObject deleteProductosRequest;
+            QJsonArray productosIds;
+            for (int i = 0; i < this->ui->tblProductos->selectedItems().count(); ++i) {
+                int row = this->ui->tblProductos->selectedItems().at(i)->row();
+                int registroId = this->ui->tblProductos->item(row, 0)->text().toInt();
+                if (!productosIds.contains(registroId)) {
+                    productosIds.append(registroId);
+                }
+            }
+            deleteProductosRequest["ProductosIds"] = productosIds;
+            Util::PerformWebPost(this, "/productos/deleteProductos", deleteProductosRequest, [=](QJsonObject result) {
+                emit this->UpdateListadoProductos();
+            }, [=](QString errorMessage) {
+                Util::ErrorAlert(this->parentWidget()->windowTitle(), errorMessage);
+            });
+        }
+    } else {
+        Util::ErrorAlert("Eliminar productos", "Seleccione al menos un producto para eliminar.");
+    }
+}
+
 
 // Carga de imágenes
 void frmProductosList::GridSelectionChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)

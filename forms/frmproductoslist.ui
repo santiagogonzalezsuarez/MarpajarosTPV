@@ -248,10 +248,77 @@ background-color: white;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnNuevo</sender>
+   <signal>clicked()</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>NuevoProducto()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>894</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnModificar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>ModificarProducto()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>894</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnEliminar</sender>
+   <signal>clicked()</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>DeleteProductos()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>894</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tblProductos</sender>
+   <signal>cellDoubleClicked(int,int)</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>ModificarProducto()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>closeParent()</slot>
   <slot>SearchChanged()</slot>
   <slot>GridSelectionChanged(int,int,int,int)</slot>
+  <slot>NuevoProducto()</slot>
+  <slot>ModificarProducto()</slot>
+  <slot>DeleteProductos()</slot>
  </slots>
 </ui>
