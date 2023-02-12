@@ -35,6 +35,8 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QObject::connect(timer, &QTimer::timeout, widget, [=](){
         reply->disconnect();
         delete timer;
+        reply->abort();
+        delete reply;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
@@ -45,6 +47,7 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            delete reply;
             QJsonObject responseObject = response.object();
             if (responseObject["Error"].isObject() && responseObject["Error"].toObject()["HasError"].isBool() && responseObject["Error"].toObject()["HasError"].toBool(false)) {
                 QString errorMessage = responseObject["Error"].toObject()["Message"].toString("Error desconocido.");
@@ -59,6 +62,7 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
             }
         } else {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            delete reply;
             QString errorMessage = "Error desconocido.";
             if (!(response.isNull() || response.isEmpty())) {
                 QJsonObject responseObject = response.object();
@@ -89,6 +93,8 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QObject::connect(timer, &QTimer::timeout, widget, [=](){
         reply->disconnect();
         delete timer;
+        reply->abort();
+        delete reply;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
@@ -99,6 +105,7 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            delete reply;
             QJsonObject responseObject = response.object();
             if (responseObject["Error"].isObject() && responseObject["Error"].toObject()["HasError"].isBool() && responseObject["Error"].toObject()["HasError"].toBool(false)) {
                 QString errorMessage = responseObject["Error"].toObject()["Message"].toString("Error desconocido.");
@@ -113,6 +120,7 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
             }
         } else {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            delete reply;
             QString errorMessage = "Error desconocido.";
             if (!(response.isNull() || response.isEmpty())) {
                 QJsonObject responseObject = response.object();
@@ -138,28 +146,30 @@ void Util::PerformWebPost(QWidget *widget, QString url, QJsonObject requestObj, 
     QJsonDocument doc(requestObj);
     QByteArray data = doc.toJson(QJsonDocument::Compact);
     QNetworkReply *reply = Util::networkAccessManager->post(request, data);
-    QMetaObject::Connection replyConnection;
-    QMetaObject::Connection errorConnection;
     QTimer *timer = new QTimer();
     timer->setSingleShot(true);
-    errorConnection = QObject::connect(timer, &QTimer::timeout, widget, [=](){
+    QObject::connect(timer, &QTimer::timeout, widget, [=](){
         reply->disconnect();
         delete timer;
+        reply->abort();
+        delete reply;
         if (errorCallback != nullptr) {
             errorCallback("Ocurrió un error al realizar la solicitud a la API.");
         }
     });
     timer->start(30000);
-    replyConnection = QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
+    QObject::connect(reply, &QNetworkReply::finished, widget, [=](){
         timer->disconnect();
         delete timer;
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray responseBytes = reply->readAll();
+            delete reply;
             if (successCallback != nullptr) {
                 successCallback(responseBytes);
             }
         } else {
             QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            delete reply;
             QString errorMessage = "Error desconocido.";
             if (!(response.isNull() || response.isEmpty())) {
                 QJsonObject responseObject = response.object();
