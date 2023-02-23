@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QProcess>
 
 namespace Ui {
 class frmProductosList;
@@ -30,6 +31,8 @@ public slots:
 signals:
     void UpdateListadoProductos();
     void AbrirProducto(int ProductoId);
+    void DisableMainWindow();
+    void EnableMainWindow();
 
 private slots:
     void closeParent();
@@ -38,6 +41,8 @@ private slots:
     void ListScrolled(int position);
     void GridSelectionChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
     void DeleteProductos();
+    void ActualizarImagen();
+    void EliminarImagen();
 
 private:
     Ui::frmProductosList *ui;
@@ -49,11 +54,13 @@ private:
     int requestId;
     int pageRequested;
     int pageLoaded;
+    void ActualizarImagenProducto(int ProductoId, QString fileName);
 
     int productoImagenId = 0;
     int productoImagenRequestId = 0;
     bool recargarImagen = false;
     bool cargandoImagen = false;
+    QProcess *fileSelectionProcess;
 };
 
 #endif // FRMPRODUCTOSLIST_H

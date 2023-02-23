@@ -37,6 +37,7 @@ frmProductosForm::frmProductosForm(QWidget *parent) :
     item = new QStandardItem("21 %"); item->setData(Util::FixDoubleForCurrency(26.2f)); this->ivaModel.appendRow(item);
     item = new QStandardItem("10 %"); item->setData(Util::FixDoubleForCurrency(11.4f)); this->ivaModel.appendRow(item);
     item = new QStandardItem("4 %"); item->setData(Util::FixDoubleForCurrency(4.5f)); this->ivaModel.appendRow(item);
+    item = new QStandardItem("Sin IVA"); item->setData(Util::FixDoubleForCurrency(0.f)); this->ivaModel.appendRow(item);
     this->ui->cmbIVA->setModel(&this->ivaModel);
     this->ui->cmbIVA->setCurrentIndex(0);
 

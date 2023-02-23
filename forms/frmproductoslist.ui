@@ -51,6 +51,20 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="btnActualizarImagen">
+       <property name="text">
+        <string>&amp;Actualizar imagen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnEliminarImagen">
+       <property name="text">
+        <string>E&amp;liminar imagen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -312,6 +326,38 @@ background-color: white;</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnActualizarImagen</sender>
+   <signal>clicked()</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>ActualizarImagen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>894</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnEliminarImagen</sender>
+   <signal>clicked()</signal>
+   <receiver>frmProductosList</receiver>
+   <slot>EliminarImagen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>894</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>closeParent()</slot>
@@ -320,5 +366,7 @@ background-color: white;</string>
   <slot>NuevoProducto()</slot>
   <slot>ModificarProducto()</slot>
   <slot>DeleteProductos()</slot>
+  <slot>ActualizarImagen()</slot>
+  <slot>EliminarImagen()</slot>
  </slots>
 </ui>

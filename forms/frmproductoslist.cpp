@@ -7,6 +7,9 @@
 #include <QMovie>
 #include <QImage>
 #include <QPainter>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QDir>
 
 frmProductosList::frmProductosList(QWidget *parent) :
     QDialog(parent),
@@ -14,6 +17,7 @@ frmProductosList::frmProductosList(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->fileSelectionProcess = nullptr;
     this->ui->txtFiltroSearch->setFocus();
 
     this->timerSearch = new QTimer(this);
@@ -44,6 +48,10 @@ frmProductosList::frmProductosList(QWidget *parent) :
 
 frmProductosList::~frmProductosList()
 {
+    if (this->fileSelectionProcess != nullptr) {
+        this->fileSelectionProcess->kill();
+        delete this->fileSelectionProcess;
+    }
     delete ui;
     delete this->timerSearch;
 }
@@ -405,5 +413,143 @@ void frmProductosList::GridSelectionChanged(int currentRow, int currentColumn, i
                 });
             }
         }
+    }
+}
+
+void frmProductosList::ActualizarImagen()
+{
+
+    // Determinamos el primer elemento seleccionado.
+    if (this->ui->tblProductos->selectedItems().count())
+    {
+        int row = this->ui->tblProductos->selectedItems().last()->row();
+        if (this->ui->tblProductos->currentRow() > -1) {
+            row = this->ui->tblProductos->currentRow();
+        }
+        int registroId = this->ui->tblProductos->item(row, 0)->text().toInt();
+
+        QString PicturesPath = Util::GetConfigString("Paths.LastPicturesPath");
+        if (PicturesPath == "" || PicturesPath == nullptr) {
+            PicturesPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+        }
+
+        if (fileSelectionProcess != nullptr) {
+            fileSelectionProcess->kill();
+            delete fileSelectionProcess;
+        }
+        fileSelectionProcess = new QProcess();
+        QString path = QString(qgetenv("PATH"));
+        bool executed = false;
+        #ifdef Q_OS_WIN
+        QStringList paths = path.split(";");
+        #else
+        QStringList paths = path.split(":");
+        #endif
+
+        for (QStringList::Iterator i = paths.begin(); i != paths.end() && !executed; ++i) {
+            QString pathItem = *i;
+            QString executableName = pathItem + QDir::separator() + "kdialog";
+            if (QFile::exists(executableName)) {
+                emit this->DisableMainWindow();
+                QStringList args;
+                args << "--getopenfilename";
+                args << "--title";
+                args << "Actualizar imagen";
+                args << PicturesPath;
+                args << "Archivos de imagen(*.jpg *.png *.gif)|Todos los archivos(*)";
+                args << "--attach";
+                args << QString::number(this->winId());
+                fileSelectionProcess->start(executableName, args);
+                if (fileSelectionProcess->waitForStarted()) {
+                    executed = true;
+                    connect(fileSelectionProcess, &QProcess::finished, this, [=]() {
+                        QString stdout = fileSelectionProcess->readAllStandardOutput();
+                        QString fileName = stdout.split("\n").first();
+                        if (this->fileSelectionProcess->exitCode() == 0) {
+                            QString filePath = fileName;
+                            if (filePath.contains(QDir::separator())) {
+                                filePath = filePath.left(filePath.lastIndexOf(QDir::separator()));
+                                Util::SetConfigString("Paths.LastPicturesPath", filePath);
+                                Util::SaveConfig();
+                            }
+                            this->ActualizarImagenProducto(registroId, fileName);
+                        }
+
+                        emit this->EnableMainWindow();
+                        delete this->fileSelectionProcess;
+                        this->fileSelectionProcess = nullptr;
+                        this->setFocus();
+                    });
+                }
+            }
+        }
+
+        if (!executed) {
+            QString fileName = QFileDialog::getOpenFileName(this, "Seleccione una imagen", PicturesPath, "Archivos de imágenes (*.png *.jpg *.bmp)");
+            if (fileName != nullptr && fileName != "") {
+                QString filePath = fileName;
+                if (filePath.contains(QDir::separator())) {
+                    filePath = filePath.left(filePath.lastIndexOf(QDir::separator()));
+                    Util::SetConfigString("Paths.LastPicturesPath", filePath);
+                    Util::SaveConfig();
+                }
+                this->ActualizarImagenProducto(registroId, fileName);
+            }
+        }
+    }
+    else
+    {
+        Util::ErrorAlert("Actualizar imagen", "Seleccione un producto para cambiar la imagen.");
+    }
+}
+
+void frmProductosList::ActualizarImagenProducto(int ProductoId, QString fileName)
+{
+    QFile imageFile(fileName);
+    if (imageFile.open(QIODevice::ReadOnly))
+    {
+        QByteArray srcRawData = imageFile.readAll().toBase64();
+        imageFile.close();
+        if (srcRawData.length() < 1) {
+            Util::ErrorAlert("Actualizar imagen", "No se ha podido leer el fichero.");
+            return;
+        }
+        QJsonObject actualizarImagenRequest;
+        actualizarImagenRequest["Id"] = ProductoId;
+        actualizarImagenRequest["fileName"] = fileName;
+        actualizarImagenRequest["base64Image"] = QString(srcRawData);
+        Util::PerformWebPost(this, "/productos/actualizarImagen", actualizarImagenRequest, [=](QJsonObject result) {
+            this->productoImagenId = -1;
+            this->GridSelectionChanged(this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn(), this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn());
+        }, [=](QString errorMessage) {
+            Util::ErrorAlert("Actualizar imagen", errorMessage);
+        });
+    }
+}
+
+void frmProductosList::EliminarImagen()
+{
+    // Determinamos el primer elemento seleccionado.
+    if (this->ui->tblProductos->selectedItems().count())
+    {
+        int row = this->ui->tblProductos->selectedItems().last()->row();
+        if (this->ui->tblProductos->currentRow() > -1) {
+            row = this->ui->tblProductos->currentRow();
+        }
+        int registroId = this->ui->tblProductos->item(row, 0)->text().toInt();
+        if (Util::WarningConfirm("Eliminar imagen del producto", "¿Está seguro de que quiere quitar la imagen del producto seleccionado?")) {
+            QJsonObject eliminarImagenRequest;
+            eliminarImagenRequest["Id"] = registroId;
+            Util::PerformWebPost(this, "/productos/eliminarImagen", eliminarImagenRequest, [=](QJsonObject result) {
+                this->productoImagenId = -1;
+                this->GridSelectionChanged(this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn(), this->ui->tblProductos->currentRow(), this->ui->tblProductos->currentColumn());
+            }, [=](QString errorMessage) {
+                Util::ErrorAlert("Eliminar imagen", errorMessage);
+            });
+        }
+    }
+    else
+    {
+        Util::ErrorAlert("Eliminar imagen", "Seleccione un producto para quitar la imagen.");
     }
 }

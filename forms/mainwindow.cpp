@@ -179,6 +179,8 @@ void MainWindow::AbrirListadoProductos() {
     this->AddSubWindow(frProductosList, "frmProductosList");
     connect(frProductosList, &frmProductosList::AbrirProducto, this, &MainWindow::AbrirProducto);
     connect(frProductosList, &frmProductosList::UpdateListadoProductos, this, &MainWindow::UpdateListadoProductos);
+    connect(frProductosList, &frmProductosList::DisableMainWindow, this, [=](){this->setDisabled(true);});
+    connect(frProductosList, &frmProductosList::EnableMainWindow, this, [=](){this->setDisabled(false);});
     frProductosList->parentWidget()->setWindowIcon(frProductosList->windowIcon());
     frProductosList->show();
     frProductosList->parentWidget()->setMinimumSize(1150, 650);
