@@ -446,6 +446,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionListado_de_proveedores</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AbrirListadoProveedores()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ShowLogin()</slot>
@@ -457,5 +473,6 @@
   <slot>AbrirListadoRoles()</slot>
   <slot>AbrirConfiguracion()</slot>
   <slot>AbrirCerrarCaja()</slot>
+  <slot>AbrirListadoProveedores()</slot>
  </slots>
 </ui>

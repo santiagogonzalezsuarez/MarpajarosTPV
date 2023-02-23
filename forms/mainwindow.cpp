@@ -12,6 +12,8 @@
 #include "frmsolicitarcontrasena.h"
 #include "frmabrircerrarcaja.h"
 #include "frmproductosform.h"
+#include "frmproveedoreslist.h"
+#include "frmproveedoresform.h"
 #include "../util/util.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -186,6 +188,16 @@ void MainWindow::AbrirListadoProductos() {
     frProductosList->parentWidget()->setMinimumSize(1150, 650);
 }
 
+void MainWindow::AbrirListadoProveedores() {
+    frmProveedoresList *frProveedoresList = new class frmProveedoresList();
+    this->AddSubWindow(frProveedoresList, "frmProveedoresList");
+    connect(frProveedoresList, &frmProveedoresList::AbrirProveedor, this, &MainWindow::AbrirProveedor);
+    connect(frProveedoresList, &frmProveedoresList::UpdateListadoProveedores, this, &MainWindow::UpdateListadoProveedores);
+    frProveedoresList->parentWidget()->setWindowIcon(frProveedoresList->windowIcon());
+    frProveedoresList->show();
+    frProveedoresList->parentWidget()->setMinimumSize(1150, 650);
+}
+
 void MainWindow::AbrirListadoUsuarios() {
     frmUsuariosList *frUsuariosList = new class frmUsuariosList();
     this->AddSubWindow(frUsuariosList, "frmUsuariosList");
@@ -238,17 +250,22 @@ void MainWindow::AbrirProducto(int ProductoId)
                 producto["Marca"] = "";
                 producto["PrecioVenta"] = 0;
                 producto["StockMinimo"] = 0;
-                // TODO: Rellenar el resto de campos.
                 this->AbrirProductoJson(producto, categorias, proveedores);
             } else {
                 QJsonObject getProductoRequest;
                 getProductoRequest["Id"] = ProductoId;
                 Util::PerformWebPost(this, "/productos/getProducto", getProductoRequest, [=](QJsonObject producto) {
                     this->AbrirProductoJson(producto, categorias, proveedores);
-                }, [](QString errorMessage) {
+                }, [=](QString errorMessage) {
                     Util::ErrorAlert("Modificar producto", errorMessage);
                 });
             }
+        }, [=](QString errorMessage) {
+            QString title = "Modificar producto";
+            if (ProductoId == 0) {
+                title = "Nuevo producto";
+            }
+            Util::ErrorAlert(title, errorMessage);
         });
     }, [=](QString errorMessage) {
         QString title = "Modificar producto";
@@ -276,6 +293,50 @@ void MainWindow::AbrirProductoJson(QJsonObject producto, QJsonArray categorias, 
     frProductosForm->parentWidget()->setMinimumSize(800, 450);
     if (!frProductosForm->parentWidget()->isMaximized()) {
         frProductosForm->parentWidget()->resize(850, 620);
+    }
+}
+
+void MainWindow::AbrirProveedor(int ProveedorId)
+{
+    if (ProveedorId == 0) {
+        QJsonObject proveedor;
+        proveedor["Id"] = 0;
+        proveedor["Nombre"] = "";
+        proveedor["Telefono"] = "";
+        proveedor["Email"] = "";
+        proveedor["PaginaWeb"] = "";
+        proveedor["Direccion"] = "";
+        proveedor["Horarios"] = "";
+        proveedor["Observaciones"] = "";
+        proveedor["MostrarEnInformeVentas"] = false;
+        this->AbrirProveedorJson(proveedor);
+    } else {
+        QJsonObject getProveedorRequest;
+        getProveedorRequest["Id"] = ProveedorId;
+        Util::PerformWebPost(this, "/proveedores/getProveedor", getProveedorRequest, [=](QJsonObject proveedor) {
+            this->AbrirProveedorJson(proveedor);
+        }, [=](QString errorMessage) {
+            Util::ErrorAlert("Modificar proveedor", errorMessage);
+        });
+    }
+}
+
+void MainWindow::AbrirProveedorJson(QJsonObject proveedor)
+{
+    frmProveedoresForm *frProveedoresForm = new class frmProveedoresForm();
+    this->AddSubWindow(frProveedoresForm, "frmProveedoresForm");
+    connect(frProveedoresForm, &frmProveedoresForm::UpdateListadoProveedores, this, &MainWindow::UpdateListadoProveedores);
+    frProveedoresForm->LoadProveedor(proveedor);
+    frProveedoresForm->parentWidget()->setWindowIcon(frProveedoresForm->windowIcon());
+    frProveedoresForm->show();
+    if (proveedor["Id"].toInt(0) == 0) {
+        frProveedoresForm->parentWidget()->setWindowTitle("Nuevo proveedor");
+    } else {
+        frProveedoresForm->parentWidget()->setWindowTitle("Modificar proveedor - " + proveedor["Nombre"].toString(""));
+    }
+    frProveedoresForm->parentWidget()->setMinimumSize(760, 500);
+    if (!frProveedoresForm->parentWidget()->isMaximized()) {
+        frProveedoresForm->parentWidget()->resize(760, 500);
     }
 }
 
@@ -431,6 +492,18 @@ void MainWindow::UpdateListadoProductos()
         if (!window->property("MPwindowType").isNull() && window->property("MPwindowType") == "frmProductosList") {
             frmProductosList *frProductosList = (frmProductosList*)window->widget();
             frProductosList->ActualizarListado();
+        }
+    }
+}
+
+void MainWindow::UpdateListadoProveedores()
+{
+    QList<QMdiSubWindow*> windowList = this->ui->mdiArea->subWindowList(QMdiArea::CreationOrder);
+    for (QList<QMdiSubWindow*>::Iterator i = windowList.begin(); i != windowList.end(); ++i) {
+        QMdiSubWindow *window = *i;
+        if (!window->property("MPwindowType").isNull() && window->property("MPwindowType") == "frmProveedoresList") {
+            frmProveedoresList *frProveedoresList = (frmProveedoresList*)window->widget();
+            frProveedoresList->ActualizarListado();
         }
     }
 }

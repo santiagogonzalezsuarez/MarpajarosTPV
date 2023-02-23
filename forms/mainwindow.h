@@ -30,20 +30,24 @@ public slots:
     void AbrirListadoProductos();
     void AbrirProducto(int ProductoId);
     void AbrirProductoJson(QJsonObject producto, QJsonArray categorias, QJsonArray proveedores);
+    void AbrirListadoProveedores();
+    void AbrirProveedor(int ProveedorId);
+    void AbrirProveedorJson(QJsonObject proveedor);
     void AbrirListadoUsuarios();
-    void Cascada();
-    void DividirHorizontalmente();
-    void CerrarTodo();
-    void AbrirConfiguracion();
     void AbrirUsuario(int UsuarioId);
     void AbrirUsuarioJson(QJsonObject usuario, QJsonArray roles);
     void AbrirListadoRoles();
     void AbrirRol(int RolId);
     void AbrirRolJson(QJsonObject rol, QJsonArray modulos);
     void AbrirCerrarCaja();
+    void Cascada();
+    void DividirHorizontalmente();
+    void CerrarTodo();
+    void AbrirConfiguracion();
 
     // Extra
     void UpdateListadoProductos();
+    void UpdateListadoProveedores();
     void UpdateListadoUsuarios();
     void UpdateListadoRoles();
 

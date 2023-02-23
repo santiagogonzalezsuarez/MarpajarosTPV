@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
         forms/frmconfiguracion.h forms/frmconfiguracion.cpp forms/frmconfiguracion.ui
         forms/frmsolicitarcontrasena.h forms/frmsolicitarcontrasena.cpp forms/frmsolicitarcontrasena.ui
         forms/frmproductosform.h forms/frmproductosform.cpp forms/frmproductosform.ui
+        forms/frmproveedoreslist.h forms/frmproveedoreslist.cpp forms/frmproveedoreslist.ui
+        forms/frmproveedoresform.h forms/frmproveedoresform.cpp forms/frmproveedoresform.ui
         util/crelaxeddoublespinbox.h util/crelaxeddoublespinbox.cpp
         util/flowlayout.h util/flowlayout.cpp
         controls/treeitem.h controls/treeitem.cpp

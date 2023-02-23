@@ -262,7 +262,8 @@ void frmProductosList::AddPage(QJsonObject page)
 
 }
 
-void frmProductosList::ListScrolled(int position) {
+void frmProductosList::ListScrolled(int position)
+{
 
     QScrollBar *vScroll = this->ui->tblProductos->verticalScrollBar();
     int verticalMaxValue = vScroll->maximum();
@@ -277,11 +278,10 @@ void frmProductosList::ListScrolled(int position) {
 
 }
 
-void frmProductosList::SearchChanged() {
-
+void frmProductosList::SearchChanged()
+{
     this->timerSearch->stop();
     this->timerSearch->start(300);
-
 }
 
 void frmProductosList::NuevoProducto()
