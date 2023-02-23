@@ -97,11 +97,6 @@ void frmProductosList::resizeEvent(QResizeEvent *resizeEvent)
 }
 
 void frmProductosList::ColumnHeaderClicked(int columnIndex) {
-    if (columnIndex == 6) {
-        this->ui->tblProductos->horizontalHeader()->setSortIndicator(this->sortColumn, this->sortDirection);
-        this->ui->tblProductos->horizontalHeader()->setSortIndicatorShown(true);
-        return; // Columna no ordenable.
-    }
     if (this->sortColumn != columnIndex) {
         this->sortColumn = columnIndex;
         this->sortDirection = Qt::SortOrder::AscendingOrder;
@@ -133,6 +128,8 @@ QString frmProductosList::getColumnName(int columnId) {
             return "Marca";
         case 5:
             return "Referencias";
+        case 6:
+            return "PrecioCompra";
         case 7:
             return "PrecioVenta";
         default:
